@@ -1,0 +1,10 @@
+# Royal Peptides Canada - Robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /checkout
+
+# Sitemap
+Sitemap: https://royalpeptides.ca/sitemap.xml
