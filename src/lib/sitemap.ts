@@ -25,9 +25,15 @@ export async function generateSitemap(): Promise<string> {
       priority: '0.9'
     },
     {
-      loc: `${baseUrl}/categories`,
+      loc: `${baseUrl}/stacks`,
       lastmod: currentDate,
       changefreq: 'weekly',
+      priority: '0.9'
+    },
+    {
+      loc: `${baseUrl}/shop`,
+      lastmod: currentDate,
+      changefreq: 'daily',
       priority: '0.8'
     },
     {
@@ -40,13 +46,20 @@ export async function generateSitemap(): Promise<string> {
       loc: `${baseUrl}/shipping`,
       lastmod: currentDate,
       changefreq: 'monthly',
-      priority: '0.6'
+      priority: '0.7'
+    },
+    {
+      loc: `${baseUrl}/legal`,
+      lastmod: currentDate,
+      changefreq: 'monthly',
+      priority: '0.5'
     }
   ];
 
   const { data: products } = await supabase
     .from('products')
     .select('slug, updated_at')
+    .eq('is_active', true)
     .order('name');
 
   if (products) {
@@ -56,22 +69,6 @@ export async function generateSitemap(): Promise<string> {
         lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : currentDate,
         changefreq: 'weekly',
         priority: '0.8'
-      });
-    });
-  }
-
-  const { data: categories } = await supabase
-    .from('categories')
-    .select('slug, updated_at')
-    .order('name');
-
-  if (categories) {
-    categories.forEach((category) => {
-      urls.push({
-        loc: `${baseUrl}/category/${category.slug}`,
-        lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : currentDate,
-        changefreq: 'weekly',
-        priority: '0.7'
       });
     });
   }

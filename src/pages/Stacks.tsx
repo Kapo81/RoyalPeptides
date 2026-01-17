@@ -7,6 +7,7 @@ import HeroPromoPills from '../components/HeroPromoPills';
 import StacksFilterBar from '../components/StacksFilterBar';
 import DiscountProgress from '../components/DiscountProgress';
 import StacksFAQ from '../components/StacksFAQ';
+import SEO from '../components/SEO';
 
 interface StacksProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -151,35 +152,6 @@ export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
 
   useEffect(() => {
     fetchBundles();
-
-    document.title = 'Peptide Research Stacks | Pre-Built Synergy Bundles | Royal Peptides';
-
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Save 10–20% with curated peptide research stacks designed for cognition, body composition, recovery, and more. Premium research-grade peptide bundles from a trusted Canadian supplier.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Save 10–20% with curated peptide research stacks designed for cognition, body composition, recovery, and more. Premium research-grade peptide bundles from a trusted Canadian supplier.';
-      document.head.appendChild(meta);
-    }
-
-    const metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', 'peptide stacks Canada, peptide bundles, research peptides, peptide combinations, recovery stack, fat loss peptides, cognitive peptides, nootropic stack, anti-aging peptides, performance peptides');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'keywords';
-      meta.content = 'peptide stacks Canada, peptide bundles, research peptides, peptide combinations, recovery stack, fat loss peptides, cognitive peptides, nootropic stack, anti-aging peptides, performance peptides';
-      document.head.appendChild(meta);
-    }
-
-    return () => {
-      const existingScript = document.querySelector('script[type="application/ld+json"]');
-      if (existingScript) {
-        existingScript.remove();
-      }
-    };
   }, []);
 
   const fetchBundles = async () => {
@@ -337,8 +309,22 @@ export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
       }
     });
 
+  const stacksSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Peptide Research Stacks",
+    "description": "Save 10-20% with curated peptide research stacks designed for cognition, body composition, recovery, and more.",
+    "url": `${window.location.origin}/stacks`
+  };
+
   return (
     <div className="min-h-screen bg-[#050608] pt-20 pb-16 md:pb-8">
+      <SEO
+        title="Peptide Research Stacks | Pre-Built Synergy Bundles | Royal Peptides"
+        description="Save 10-20% with curated peptide research stacks designed for cognition, body composition, recovery, and more. Premium research-grade peptide bundles from a trusted Canadian supplier."
+        canonical={`${window.location.origin}/stacks`}
+        structuredData={stacksSchema}
+      />
       <PageBackground variant="stacks" />
 
       <section className="relative bg-gradient-to-b from-[#050608] via-[#0B0D12] to-[#050608] py-12 md:py-20 border-b border-white/10 overflow-hidden">

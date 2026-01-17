@@ -6,7 +6,7 @@ interface SEOProps {
   canonical?: string;
   ogType?: string;
   ogImage?: string;
-  structuredData?: object;
+  structuredData?: object | object[];
 }
 
 export default function SEO({
@@ -55,14 +55,20 @@ export default function SEO({
       linkElement.href = canonical;
     }
 
+    const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    existingScripts.forEach(script => script.remove());
+
     if (structuredData) {
-      let scriptElement = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
-      if (!scriptElement) {
-        scriptElement = document.createElement('script');
-        scriptElement.type = 'application/ld+json';
-        document.head.appendChild(scriptElement);
-      }
-      scriptElement.textContent = JSON.stringify(structuredData);
+      const dataArray = Array.isArray(structuredData) ? structuredData : [structuredData];
+
+      dataArray.forEach(data => {
+        if (data) {
+          const scriptElement = document.createElement('script');
+          scriptElement.type = 'application/ld+json';
+          scriptElement.textContent = JSON.stringify(data);
+          document.head.appendChild(scriptElement);
+        }
+      });
     }
   }, [title, description, canonical, ogType, ogImage, structuredData]);
 

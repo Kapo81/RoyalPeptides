@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ShoppingCart, Check, CheckCircle, XCircle } from 'lucide-react';
 import { supabase, Product, getSessionId } from '../lib/supabase';
 import VialPlaceholder from '../components/VialPlaceholder';
+import SEO from '../components/SEO';
 
 interface ShopProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -95,6 +96,11 @@ export default function Shop({ onNavigate, onCartUpdate }: ShopProps) {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <SEO
+        title="Shop Research Peptides | Royal Peptides Canada"
+        description="Browse and buy high-purity research peptides online. Premium quality compounds for laboratory use with fast Canadian shipping and real-time inventory tracking."
+        canonical={`${window.location.origin}/shop`}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-tight">

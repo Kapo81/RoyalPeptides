@@ -1,23 +1,15 @@
-import { useEffect } from 'react';
 import { AlertTriangle, Shield, FileText, Scale, Info } from 'lucide-react';
 import PageBackground from '../components/PageBackground';
+import SEO from '../components/SEO';
 
 export default function Legal() {
-  useEffect(() => {
-    document.title = 'Research Use Only Disclaimer | Royal Peptides Labs Canada';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Royal Peptides provides research-only peptides and related compounds for laboratory use in Canada. Not for human consumption or medical use. Read our full legal disclaimer.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Royal Peptides provides research-only peptides and related compounds for laboratory use in Canada. Not for human consumption or medical use. Read our full legal disclaimer.';
-      document.head.appendChild(meta);
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#05070b] relative pt-20">
+      <SEO
+        title="Research Use Only Disclaimer | Royal Peptides Canada"
+        description="Royal Peptides provides research-only peptides and related compounds for laboratory use in Canada. Not for human consumption or medical use. Read our full legal disclaimer."
+        canonical={`${window.location.origin}/legal`}
+      />
       <PageBackground variant="legal" />
 
       <div className="relative z-10 bg-gradient-to-b from-[#0B0D12] to-[#05070b] text-white py-10 md:py-16 border-b border-white/10">
