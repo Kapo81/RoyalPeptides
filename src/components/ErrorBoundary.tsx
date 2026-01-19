@@ -59,6 +59,8 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const currentRoute = window.location.pathname;
+
       return (
         <div className="min-h-screen bg-[#05070b] flex items-center justify-center p-4">
           <div className="max-w-2xl w-full bg-gradient-to-br from-red-900/20 to-red-950/20 border border-red-500/30 rounded-xl p-8">
@@ -70,8 +72,11 @@ export default class ErrorBoundary extends Component<Props, State> {
                 <h1 className="text-2xl font-bold text-white mb-2">
                   Something went wrong
                 </h1>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-sm mb-2">
                   An error occurred while rendering this page. The error details are shown below.
+                </p>
+                <p className="text-gray-500 text-xs">
+                  Route: <span className="text-[#00A0E0] font-mono">{currentRoute}</span>
                 </p>
               </div>
             </div>

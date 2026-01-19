@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import MobileBottomNav from './components/MobileBottomNav';
+import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
@@ -171,37 +172,41 @@ function App() {
 
 
   return (
-    <div className="min-h-screen bg-[#050608]">
-      {currentPage !== 'admin' && currentPage !== 'admin-login' && (
-        <Navigation currentPage={currentPage} onNavigate={handleNavigate} cartCount={cartCount} />
-      )}
+    <ErrorBoundary onNavigate={handleNavigate}>
+      <div className="min-h-screen bg-[#050608]">
+        {currentPage !== 'admin' && currentPage !== 'admin-login' && (
+          <Navigation currentPage={currentPage} onNavigate={handleNavigate} cartCount={cartCount} />
+        )}
 
-      {currentPage === 'home' && <Home onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
-      {currentPage === 'shop' && <Shop onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
-      {currentPage === 'cart' && <Cart onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
-      {currentPage === 'catalogue' && <Catalogue onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
-      {currentPage === 'stacks' && <Stacks onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
-      {currentPage === 'product' && (
-        <ProductDetail productSlug={productSlug} onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />
-      )}
-      {currentPage === 'checkout' && <Checkout onNavigate={handleNavigate} />}
-      {currentPage === 'legal' && <Legal />}
-      {currentPage === 'about' && <About onNavigate={handleNavigate} />}
-      {currentPage === 'shipping' && <Shipping onNavigate={handleNavigate} />}
-      {currentPage === 'order-confirmation' && <OrderConfirmation orderNumber={orderNumber} onNavigate={handleNavigate} />}
-      {currentPage === 'payment-success' && <PaymentSuccess onNavigate={handleNavigate} />}
-      {currentPage === 'admin-login' && <AdminLogin onNavigate={handleNavigate} />}
-      {currentPage === 'admin' && <AdminMain onNavigate={handleNavigate} />}
+        <ErrorBoundary onNavigate={handleNavigate}>
+          {currentPage === 'home' && <Home onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
+          {currentPage === 'shop' && <Shop onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
+          {currentPage === 'cart' && <Cart onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
+          {currentPage === 'catalogue' && <Catalogue onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
+          {currentPage === 'stacks' && <Stacks onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />}
+          {currentPage === 'product' && (
+            <ProductDetail productSlug={productSlug} onNavigate={handleNavigate} onCartUpdate={handleCartUpdate} />
+          )}
+          {currentPage === 'checkout' && <Checkout onNavigate={handleNavigate} />}
+          {currentPage === 'legal' && <Legal />}
+          {currentPage === 'about' && <About onNavigate={handleNavigate} />}
+          {currentPage === 'shipping' && <Shipping onNavigate={handleNavigate} />}
+          {currentPage === 'order-confirmation' && <OrderConfirmation orderNumber={orderNumber} onNavigate={handleNavigate} />}
+          {currentPage === 'payment-success' && <PaymentSuccess onNavigate={handleNavigate} />}
+          {currentPage === 'admin-login' && <AdminLogin onNavigate={handleNavigate} />}
+          {currentPage === 'admin' && <AdminMain onNavigate={handleNavigate} />}
+        </ErrorBoundary>
 
-      {currentPage !== 'admin' && currentPage !== 'admin-login' && <Footer onNavigate={handleNavigate} />}
-      {currentPage !== 'admin' && currentPage !== 'admin-login' && (
-        <MobileBottomNav
-          currentPage={currentPage}
-          onNavigate={handleNavigate}
-          cartCount={cartCount}
-        />
-      )}
-    </div>
+        {currentPage !== 'admin' && currentPage !== 'admin-login' && <Footer onNavigate={handleNavigate} />}
+        {currentPage !== 'admin' && currentPage !== 'admin-login' && (
+          <MobileBottomNav
+            currentPage={currentPage}
+            onNavigate={handleNavigate}
+            cartCount={cartCount}
+          />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
 

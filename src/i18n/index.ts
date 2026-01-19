@@ -19,7 +19,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'fr-CA',
+    fallbackLng: 'en',
     supportedLngs: ['fr-CA', 'en'],
     lng: 'fr-CA',
     detection: {
@@ -29,6 +29,12 @@ i18n
     },
     interpolation: {
       escapeValue: false,
+    },
+    returnNull: false,
+    returnEmptyString: false,
+    saveMissing: false,
+    missingKeyHandler: (lngs, ns, key) => {
+      console.warn(`[i18n] Missing translation key: ${key}`);
     },
   });
 
