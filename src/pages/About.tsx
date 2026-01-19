@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Shield, Package, Truck, FlaskConical, MapPin, Search, ShoppingCart, Lock, CheckCircle, Sparkles, HeadphonesIcon, Award, Eye } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import PageBackground from '../components/PageBackground';
@@ -84,7 +84,7 @@ export default function About({ onNavigate }: AboutProps) {
     },
   ];
 
-  const faqItems = [
+  const faqItems = useMemo(() => [
     {
       question: t('about.faq_stock_q'),
       answer: t('about.faq_stock_a'),
@@ -117,7 +117,7 @@ export default function About({ onNavigate }: AboutProps) {
       question: t('about.faq_peptides_q'),
       answer: t('about.faq_peptides_a'),
     },
-  ];
+  ], [t]);
 
   useEffect(() => {
     if (origin) {

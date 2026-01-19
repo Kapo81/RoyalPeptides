@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { supabase, Product, Category, getSessionId } from '../lib/supabase';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -140,7 +140,7 @@ export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) 
     onCartUpdate?.();
   };
 
-  const filteredProducts = products
+  const filteredProducts = useMemo(() => products
     .filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            product.benefits_summary?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -171,7 +171,7 @@ export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) 
       }
 
       return 0;
-    });
+    }), [products, searchTerm, selectedCategory, sortBy]);
 
   const getShortDescription = (description: string) => {
     if (!description) return '';

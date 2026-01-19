@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Package, Globe, Truck, Shield, MapPin, Clock, Mail, HeadphonesIcon, CheckCircle, AlertCircle, XCircle, MessageCircle, FileText } from 'lucide-react';
 import PageBackground from '../components/PageBackground';
 import SEO from '../components/SEO';
@@ -92,7 +92,7 @@ export default function Shipping({ onNavigate }: ShippingProps) {
     },
   ];
 
-  const faqItems = [
+  const faqItems = useMemo(() => [
     {
       question: 'Do you ship worldwide?',
       answer: 'Yes, we ship to all provinces and territories within Canada, as well as internationally to most countries. Shipping costs are calculated automatically at checkout based on your location.',
@@ -133,7 +133,7 @@ export default function Shipping({ onNavigate }: ShippingProps) {
       question: 'How do I contact support?',
       answer: 'You can reach our support team via the contact information provided on our website. We typically respond within 24 hours during business days.',
     },
-  ];
+  ], [settings]);
 
   useEffect(() => {
     if (origin) {

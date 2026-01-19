@@ -7,8 +7,7 @@ interface SitemapURL {
   priority?: string;
 }
 
-export async function generateSitemap(): Promise<string> {
-  const baseUrl = window.location.origin;
+export async function generateSitemap(baseUrl: string): Promise<string> {
   const currentDate = new Date().toISOString().split('T')[0];
 
   const urls: SitemapURL[] = [
