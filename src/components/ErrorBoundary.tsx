@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Home, RefreshCw, Copy, Check } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -11,6 +11,7 @@ interface State {
   hasError: boolean;
   error: Error | null;
   errorInfo: ErrorInfo | null;
+  copied: boolean;
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
@@ -20,6 +21,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
+      copied: false,
     };
   }
 
@@ -28,6 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorInfo: null,
+      copied: false,
     };
   }
 
@@ -45,6 +48,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
+      copied: false,
     });
   };
 
@@ -52,14 +56,52 @@ export default class ErrorBoundary extends Component<Props, State> {
     const { onNavigate, fallbackRoute } = this.props;
     if (onNavigate) {
       onNavigate(fallbackRoute || 'home');
-    } else {
+    } else if (typeof window !== 'undefined') {
       window.location.href = '/';
+    }
+  };
+
+  handleCopyError = async () => {
+    const currentRoute = typeof window !== 'undefined' ? window.location.pathname : 'Unknown Route';
+    const errorDetails = {
+      route: currentRoute,
+      message: this.state.error?.message || 'Unknown error',
+      stack: this.state.error?.stack || 'No stack trace',
+      componentStack: this.state.errorInfo?.componentStack || 'No component stack',
+      timestamp: new Date().toISOString(),
+    };
+
+    const errorText = `Error Report
+===============
+Route: ${errorDetails.route}
+Timestamp: ${errorDetails.timestamp}
+
+Error Message:
+${errorDetails.message}
+
+Stack Trace:
+${errorDetails.stack}
+
+Component Stack:
+${errorDetails.componentStack}
+`;
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(errorText);
+        this.setState({ copied: true });
+        setTimeout(() => {
+          this.setState({ copied: false });
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy error details:', err);
     }
   };
 
   render() {
     if (this.state.hasError) {
-      const currentRoute = window.location.pathname;
+      const currentRoute = typeof window !== 'undefined' ? window.location.pathname : 'Unknown Route';
 
       return (
         <div className="min-h-screen bg-[#05070b] flex items-center justify-center p-4">
@@ -114,11 +156,27 @@ export default class ErrorBoundary extends Component<Props, State> {
                 <Home className="h-5 w-5" />
                 Back to Store
               </button>
+              <button
+                onClick={this.handleCopyError}
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-white/5 text-white rounded-lg font-semibold hover:bg-white/10 transition-all border border-white/10"
+              >
+                {this.state.copied ? (
+                  <>
+                    <Check className="h-5 w-5 text-green-400" />
+                    <span className="text-green-400">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-5 w-5" />
+                    Copy Details
+                  </>
+                )}
+              </button>
             </div>
 
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-xs text-gray-500">
-                If this error persists, please contact support with the error details above.
+                If this error persists, please contact support with the error details above. Use the "Copy Details" button to copy the full error report.
               </p>
             </div>
           </div>

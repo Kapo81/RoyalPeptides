@@ -154,7 +154,24 @@ export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
   const [sortBy, setSortBy] = useState('best-value');
 
   useEffect(() => {
-    fetchBundles();
+    let cancelled = false;
+
+    const loadBundles = async () => {
+      const { data, error } = await supabase.rpc('get_all_bundles');
+
+      if (!cancelled) {
+        if (!error && data) {
+          setBundles(data);
+        }
+        setLoading(false);
+      }
+    };
+
+    loadBundles();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const fetchBundles = async () => {
@@ -167,56 +184,59 @@ export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
   };
 
   useEffect(() => {
-    if (bundles.length > 0) {
-      const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "Peptide Research Stacks & Bundles",
-        "description": "Save 10–20% with curated peptide research stacks designed for cognition, body composition, recovery, and more.",
-        "url": "https://royalpeptides.com/stacks",
-        "mainEntity": {
-          "@type": "ItemList",
-          "itemListElement": bundles.map((bundle, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "item": {
-              "@type": "Product",
-              "name": bundle.bundle_name,
-              "description": bundle.bundle_description,
-              "offers": {
-                "@type": "Offer",
-                "price": bundle.discounted_price.toFixed(2),
-                "priceCurrency": "CAD",
-                "availability": "https://schema.org/InStock",
-                "url": "https://royalpeptides.com/stacks"
-              },
-              "additionalProperty": [
-                {
-                  "@type": "PropertyValue",
-                  "name": "isBundle",
-                  "value": "true"
-                },
-                {
-                  "@type": "PropertyValue",
-                  "name": "originalPrice",
-                  "value": bundle.total_price.toFixed(2)
-                }
-              ]
-            }
-          }))
-        }
-      };
+    if (typeof window === 'undefined' || bundles.length === 0) return;
 
-      const existingScript = document.querySelector('script[type="application/ld+json"]');
-      if (existingScript) {
-        existingScript.textContent = JSON.stringify(structuredData);
-      } else {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
-        script.textContent = JSON.stringify(structuredData);
-        document.head.appendChild(script);
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Peptide Research Stacks & Bundles",
+      "description": "Save 10–20% with curated peptide research stacks designed for cognition, body composition, recovery, and more.",
+      "url": "https://royalpeptides.com/stacks",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": bundles.map((bundle, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Product",
+            "name": bundle.bundle_name,
+            "description": bundle.bundle_description,
+            "offers": {
+              "@type": "Offer",
+              "price": bundle.discounted_price.toFixed(2),
+              "priceCurrency": "CAD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://royalpeptides.com/stacks"
+            },
+            "additionalProperty": [
+              {
+                "@type": "PropertyValue",
+                "name": "isBundle",
+                "value": "true"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "originalPrice",
+                "value": bundle.total_price.toFixed(2)
+              }
+            ]
+          }
+        }))
       }
-    }
+    };
+
+    const scriptId = 'stacks-page-schema';
+    document.getElementById(scriptId)?.remove();
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      document.getElementById(scriptId)?.remove();
+    };
   }, [bundles]);
 
   const addBundleToCart = async (bundle: Bundle) => {

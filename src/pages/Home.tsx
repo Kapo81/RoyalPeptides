@@ -40,11 +40,30 @@ export default function Home({ onNavigate, onCartUpdate }: HomeProps) {
   const [structuredData, setStructuredData] = useState<object[]>([]);
 
   useEffect(() => {
-    fetchBundles();
+    let cancelled = false;
+
+    const loadBundles = async () => {
+      const { data, error } = await supabase.rpc('get_all_bundles');
+
+      if (!cancelled) {
+        if (!error && data) {
+          setBundles(data.slice(0, 3));
+        }
+        setLoading(false);
+      }
+    };
+
+    loadBundles();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (origin) {
+    let cancelled = false;
+
+    if (origin && !cancelled) {
       const organizationSchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -64,6 +83,10 @@ export default function Home({ onNavigate, onCartUpdate }: HomeProps) {
 
       setStructuredData([organizationSchema, websiteSchema]);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [origin]);
 
   const fetchBundles = async () => {

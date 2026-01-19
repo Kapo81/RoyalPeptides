@@ -9,6 +9,10 @@ interface SEOProps {
   structuredData?: object | object[];
 }
 
+function sanitizeRouteKey(pathname: string): string {
+  return pathname.replace(/\//g, '-').replace(/^-/, '') || 'home';
+}
+
 export default function SEO({
   title,
   description,
@@ -18,58 +22,78 @@ export default function SEO({
   structuredData
 }: SEOProps) {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const routeKey = sanitizeRouteKey(window.location.pathname);
+
     document.title = title;
 
     const metaTags = [
-      { name: 'description', content: description },
-      { property: 'og:title', content: title },
-      { property: 'og:description', content: description },
-      { property: 'og:type', content: ogType },
-      { property: 'og:image', content: ogImage },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: title },
-      { name: 'twitter:description', content: description },
+      { name: 'description', content: description, id: `seo-meta-description-${routeKey}` },
+      { property: 'og:title', content: title, id: `seo-og-title-${routeKey}` },
+      { property: 'og:description', content: description, id: `seo-og-description-${routeKey}` },
+      { property: 'og:type', content: ogType, id: `seo-og-type-${routeKey}` },
+      { property: 'og:image', content: ogImage, id: `seo-og-image-${routeKey}` },
+      { name: 'twitter:card', content: 'summary_large_image', id: `seo-twitter-card-${routeKey}` },
+      { name: 'twitter:title', content: title, id: `seo-twitter-title-${routeKey}` },
+      { name: 'twitter:description', content: description, id: `seo-twitter-description-${routeKey}` },
     ];
 
-    metaTags.forEach(({ name, property, content }) => {
-      const selector = name ? `meta[name="${name}"]` : `meta[property="${property}"]`;
-      let element = document.querySelector(selector);
+    metaTags.forEach(({ name, property, content, id }) => {
+      document.getElementById(id)?.remove();
 
-      if (!element) {
-        element = document.createElement('meta');
-        if (name) element.setAttribute('name', name);
-        if (property) element.setAttribute('property', property);
-        document.head.appendChild(element);
-      }
-
+      const element = document.createElement('meta');
+      element.id = id;
+      if (name) element.setAttribute('name', name);
+      if (property) element.setAttribute('property', property);
       element.setAttribute('content', content);
+      document.head.appendChild(element);
     });
 
     if (canonical) {
-      let linkElement = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-      if (!linkElement) {
-        linkElement = document.createElement('link');
-        linkElement.rel = 'canonical';
-        document.head.appendChild(linkElement);
-      }
+      const canonicalId = `seo-canonical-${routeKey}`;
+      document.getElementById(canonicalId)?.remove();
+
+      const linkElement = document.createElement('link');
+      linkElement.id = canonicalId;
+      linkElement.rel = 'canonical';
       linkElement.href = canonical;
+      document.head.appendChild(linkElement);
     }
 
-    const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
-    existingScripts.forEach(script => script.remove());
-
     if (structuredData) {
-      const dataArray = Array.isArray(structuredData) ? structuredData : [structuredData];
+      const schemas = Array.isArray(structuredData) ? structuredData : [structuredData];
 
-      dataArray.forEach(data => {
-        if (data) {
+      schemas.forEach((schema, index) => {
+        if (schema) {
+          const scriptId = `seo-jsonld-${routeKey}-${index}`;
+          document.getElementById(scriptId)?.remove();
+
           const scriptElement = document.createElement('script');
+          scriptElement.id = scriptId;
           scriptElement.type = 'application/ld+json';
-          scriptElement.textContent = JSON.stringify(data);
+          scriptElement.textContent = JSON.stringify(schema);
           document.head.appendChild(scriptElement);
         }
       });
     }
+
+    return () => {
+      metaTags.forEach(({ id }) => {
+        document.getElementById(id)?.remove();
+      });
+
+      if (canonical) {
+        document.getElementById(`seo-canonical-${routeKey}`)?.remove();
+      }
+
+      if (structuredData) {
+        const schemas = Array.isArray(structuredData) ? structuredData : [structuredData];
+        schemas.forEach((_, index) => {
+          document.getElementById(`seo-jsonld-${routeKey}-${index}`)?.remove();
+        });
+      }
+    };
   }, [title, description, canonical, ogType, ogImage, structuredData]);
 
   return null;

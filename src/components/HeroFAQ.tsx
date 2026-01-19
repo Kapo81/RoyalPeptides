@@ -3,6 +3,8 @@ import { HelpCircle } from 'lucide-react';
 
 export default function HeroFAQ() {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const faqSchema = {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -34,13 +36,17 @@ export default function HeroFAQ() {
       ],
     };
 
+    const scriptId = 'hero-faq-schema';
+    document.getElementById(scriptId)?.remove();
+
     const script = document.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
-    script.text = JSON.stringify(faqSchema);
+    script.textContent = JSON.stringify(faqSchema);
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      document.getElementById(scriptId)?.remove();
     };
   }, []);
 

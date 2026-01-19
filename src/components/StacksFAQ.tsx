@@ -3,6 +3,8 @@ import { HelpCircle } from 'lucide-react';
 
 export default function StacksFAQ() {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const faqSchema = {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -50,17 +52,17 @@ export default function StacksFAQ() {
       ],
     };
 
+    const scriptId = 'stacks-faq-schema';
+    document.getElementById(scriptId)?.remove();
+
     const script = document.createElement('script');
+    script.id = scriptId;
     script.type = 'application/ld+json';
-    script.text = JSON.stringify(faqSchema);
-    script.id = 'stacks-faq-schema';
+    script.textContent = JSON.stringify(faqSchema);
     document.head.appendChild(script);
 
     return () => {
-      const existingScript = document.getElementById('stacks-faq-schema');
-      if (existingScript) {
-        document.head.removeChild(existingScript);
-      }
+      document.getElementById(scriptId)?.remove();
     };
   }, []);
 
