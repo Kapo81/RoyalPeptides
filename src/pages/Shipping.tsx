@@ -6,6 +6,7 @@ import DeliveryTimeline from '../components/DeliveryTimeline';
 import ReturnProcessTimeline from '../components/ReturnProcessTimeline';
 import FAQAccordion from '../components/FAQAccordion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useOrigin } from '../hooks/useOrigin';
 import { supabase } from '../lib/supabase';
 
 interface ShippingProps {
@@ -21,6 +22,8 @@ interface SiteSettings {
 
 export default function Shipping({ onNavigate }: ShippingProps) {
   const prefersReducedMotion = useReducedMotion();
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object[]>([]);
   const [settings, setSettings] = useState<SiteSettings>({
     shipping_text_canada: '$25 flat rate shipping Canada',
     shipping_base_cost: 25,
@@ -132,45 +135,51 @@ export default function Shipping({ onNavigate }: ShippingProps) {
     },
   ];
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": window.location.origin
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Shipping & Returns",
-        "item": `${window.location.origin}/shipping`
-      }
-    ]
-  };
+  useEffect(() => {
+    if (origin) {
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shipping & Returns",
+            "item": `${origin}/shipping`
+          }
+        ]
+      };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqItems.map(item => ({
-      "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.answer
-      }
-    }))
-  };
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqItems.map(item => ({
+          "@type": "Question",
+          "name": item.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": item.answer
+          }
+        }))
+      };
+
+      setStructuredData([breadcrumbSchema, faqSchema]);
+    }
+  }, [origin, faqItems]);
 
   return (
     <div className="min-h-screen bg-[#050608] pt-20 pb-16 md:pb-0">
       <SEO
         title="Shipping & Returns | Royal Peptides Canada"
         description="Clear shipping timelines, discreet packaging, and transparent return policies. Fast Canada-wide delivery and worldwide shipping available."
-        canonical={`${window.location.origin}/shipping`}
-        structuredData={[breadcrumbSchema, faqSchema]}
+        canonical={origin ? `${origin}/shipping` : undefined}
+        structuredData={structuredData}
       />
       <PageBackground variant="about" />
 

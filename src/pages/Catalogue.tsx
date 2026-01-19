@@ -10,6 +10,7 @@ import CatalogueHeader from '../components/CatalogueHeader';
 import CatalogueFilterBar from '../components/CatalogueFilterBar';
 import ProductCard from '../components/ProductCard';
 import { cacheManager } from '../lib/cacheManager';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface CatalogueProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -24,6 +25,8 @@ interface ProductWithCategories extends Product {
 
 export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) {
   const { t } = useLanguage();
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object[]>([]);
   const [products, setProducts] = useState<ProductWithCategories[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -176,6 +179,56 @@ export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) 
     return sentences.length > 0 ? sentences[0] + '.' : description;
   };
 
+  useEffect(() => {
+    if (origin && !loading) {
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Catalogue",
+            "item": `${origin}/catalogue`
+          }
+        ]
+      };
+
+      const productListSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": filteredProducts.slice(0, 20).map((product, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Product",
+            "name": product.name,
+            "image": product.image_url || `${origin}/ab72c5e3-25b2-4790-8243-cdc880fc0bdc.png`,
+            "description": product.benefits_summary || product.short_name,
+            "category": product.category_names[0] || "Research Peptides",
+            "offers": {
+              "@type": "Offer",
+              "price": (product.selling_price || product.price_cad || 0).toFixed(2),
+              "priceCurrency": "CAD",
+              "availability": product.qty_in_stock && product.qty_in_stock > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+              "url": `${origin}/product/${product.slug}`
+            }
+          }
+        }))
+      };
+
+      setStructuredData([breadcrumbSchema, productListSchema]);
+    }
+  }, [origin, loading, filteredProducts]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#05070b] flex items-center justify-center pt-20">
@@ -187,57 +240,13 @@ export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) 
     );
   }
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": window.location.origin
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Catalogue",
-        "item": `${window.location.origin}/catalogue`
-      }
-    ]
-  };
-
-  const productListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "itemListElement": filteredProducts.slice(0, 20).map((product, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "item": {
-        "@type": "Product",
-        "name": product.name,
-        "image": product.image_url || `${window.location.origin}/ab72c5e3-25b2-4790-8243-cdc880fc0bdc.png`,
-        "description": product.benefits_summary || product.short_name,
-        "category": product.category_names[0] || "Research Peptides",
-        "offers": {
-          "@type": "Offer",
-          "price": (product.selling_price || product.price_cad || 0).toFixed(2),
-          "priceCurrency": "CAD",
-          "availability": product.qty_in_stock && product.qty_in_stock > 0
-            ? "https://schema.org/InStock"
-            : "https://schema.org/OutOfStock",
-          "url": `${window.location.origin}/product/${product.slug}`
-        }
-      }
-    }))
-  };
-
   return (
     <div className="min-h-screen bg-[#050608] relative">
       <SEO
         title="Research Peptides Catalogue | Royal Peptides Canada"
         description="Browse our complete catalogue of high-purity research peptides and compounds. Premium quality, fast Canadian shipping, comprehensive research support."
-        canonical={`${window.location.origin}/catalogue`}
-        structuredData={[breadcrumbSchema, productListSchema]}
+        canonical={origin ? `${origin}/catalogue` : undefined}
+        structuredData={structuredData}
       />
       <PageBackground variant="catalogue" />
 

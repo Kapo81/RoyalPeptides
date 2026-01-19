@@ -3,6 +3,7 @@ import { ShoppingCart, Check, CheckCircle, XCircle } from 'lucide-react';
 import { supabase, Product, getSessionId } from '../lib/supabase';
 import VialPlaceholder from '../components/VialPlaceholder';
 import SEO from '../components/SEO';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface ShopProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -14,6 +15,7 @@ interface ProductWithStock extends Product {
 }
 
 export default function Shop({ onNavigate, onCartUpdate }: ShopProps) {
+  const origin = useOrigin();
   const [products, setProducts] = useState<ProductWithStock[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
@@ -99,7 +101,7 @@ export default function Shop({ onNavigate, onCartUpdate }: ShopProps) {
       <SEO
         title="Shop Research Peptides | Royal Peptides Canada"
         description="Browse and buy high-purity research peptides online. Premium quality compounds for laboratory use with fast Canadian shipping and real-time inventory tracking."
-        canonical={`${window.location.origin}/shop`}
+        canonical={origin ? `${origin}/shop` : undefined}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">

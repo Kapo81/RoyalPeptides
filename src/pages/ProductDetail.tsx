@@ -6,6 +6,7 @@ import ShippingCalculator from '../components/ShippingCalculator';
 import { trackPageView, trackProductClick } from '../lib/analytics';
 import PageBackground from '../components/PageBackground';
 import SEO from '../components/SEO';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface ProductDetailProps {
   productSlug: string;
@@ -14,6 +15,8 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }: ProductDetailProps) {
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object[]>([]);
   const [product, setProduct] = useState<Product | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
@@ -144,46 +147,52 @@ export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }:
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const productSchema = product ? {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": product.name,
-    "image": product.image_url,
-    "description": product.description || product.benefits_summary || "Research peptide for laboratory use",
-    "sku": product.slug,
-    "offers": {
-      "@type": "Offer",
-      "url": `${window.location.origin}/product/${product.slug}`,
-      "priceCurrency": "CAD",
-      "price": product.selling_price || product.price_cad,
-      "availability": product.qty_in_stock && product.qty_in_stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-    }
-  } : null;
-
-  const breadcrumbSchema = product ? {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": window.location.origin
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Catalogue",
-        "item": `${window.location.origin}/catalogue`
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
+  useEffect(() => {
+    if (origin && product) {
+      const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
         "name": product.name,
-        "item": `${window.location.origin}/product/${product.slug}`
-      }
-    ]
-  } : null;
+        "image": product.image_url,
+        "description": product.description || product.benefits_summary || "Research peptide for laboratory use",
+        "sku": product.slug,
+        "offers": {
+          "@type": "Offer",
+          "url": `${origin}/product/${product.slug}`,
+          "priceCurrency": "CAD",
+          "price": product.selling_price || product.price_cad,
+          "availability": product.qty_in_stock && product.qty_in_stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      };
+
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Catalogue",
+            "item": `${origin}/catalogue`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": product.name,
+            "item": `${origin}/product/${product.slug}`
+          }
+        ]
+      };
+
+      setStructuredData([productSchema, breadcrumbSchema]);
+    }
+  }, [origin, product]);
 
   const isLowStock = product && product.qty_in_stock && product.qty_in_stock > 0 && product.qty_in_stock <= 5;
   const isInStock = product && product.qty_in_stock && product.qty_in_stock > 0;
@@ -194,10 +203,10 @@ export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }:
         <SEO
           title={`${product.name} | Research Peptides Canada`}
           description={product.benefits_summary || product.description?.substring(0, 160) || `${product.name} research peptide for laboratory use`}
-          canonical={`${window.location.origin}/product/${product.slug}`}
+          canonical={origin ? `${origin}/product/${product.slug}` : undefined}
           ogType="product"
           ogImage={product.image_url || undefined}
-          structuredData={[productSchema, breadcrumbSchema]}
+          structuredData={structuredData}
         />
       )}
       <PageBackground variant="product" />

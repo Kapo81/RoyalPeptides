@@ -8,6 +8,7 @@ import StacksFilterBar from '../components/StacksFilterBar';
 import DiscountProgress from '../components/DiscountProgress';
 import StacksFAQ from '../components/StacksFAQ';
 import SEO from '../components/SEO';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface StacksProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -140,6 +141,8 @@ const bundleInfo: Record<string, BundleEnhancedInfo> = {
 };
 
 export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object | null>(null);
   const [bundles, setBundles] = useState<Bundle[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingBundle, setAddingBundle] = useState<Record<string, boolean>>({});
@@ -309,21 +312,26 @@ export default function Stacks({ onNavigate, onCartUpdate }: StacksProps) {
       }
     });
 
-  const stacksSchema = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "Peptide Research Stacks",
-    "description": "Save 10-20% with curated peptide research stacks designed for cognition, body composition, recovery, and more.",
-    "url": `${window.location.origin}/stacks`
-  };
+  useEffect(() => {
+    if (origin) {
+      const stacksSchema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Peptide Research Stacks",
+        "description": "Save 10-20% with curated peptide research stacks designed for cognition, body composition, recovery, and more.",
+        "url": `${origin}/stacks`
+      };
+      setStructuredData(stacksSchema);
+    }
+  }, [origin]);
 
   return (
     <div className="min-h-screen bg-[#050608] pt-20 pb-16 md:pb-8">
       <SEO
         title="Peptide Research Stacks | Pre-Built Synergy Bundles | Royal Peptides"
         description="Save 10-20% with curated peptide research stacks designed for cognition, body composition, recovery, and more. Premium research-grade peptide bundles from a trusted Canadian supplier."
-        canonical={`${window.location.origin}/stacks`}
-        structuredData={stacksSchema}
+        canonical={origin ? `${origin}/stacks` : undefined}
+        structuredData={structuredData}
       />
       <PageBackground variant="stacks" />
 

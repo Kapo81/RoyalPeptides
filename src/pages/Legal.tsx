@@ -1,14 +1,17 @@
 import { AlertTriangle, Shield, FileText, Scale, Info } from 'lucide-react';
 import PageBackground from '../components/PageBackground';
 import SEO from '../components/SEO';
+import { useOrigin } from '../hooks/useOrigin';
 
 export default function Legal() {
+  const origin = useOrigin();
+
   return (
     <div className="min-h-screen bg-[#05070b] relative pt-20">
       <SEO
         title="Research Use Only Disclaimer | Royal Peptides Canada"
         description="Royal Peptides provides research-only peptides and related compounds for laboratory use in Canada. Not for human consumption or medical use. Read our full legal disclaimer."
-        canonical={`${window.location.origin}/legal`}
+        canonical={origin ? `${origin}/legal` : undefined}
       />
       <PageBackground variant="legal" />
 

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Shield, Package, Truck, FlaskConical, MapPin, Search, ShoppingCart, Lock, CheckCircle, Sparkles, HeadphonesIcon, Award, Eye } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import PageBackground from '../components/PageBackground';
@@ -6,6 +7,7 @@ import BrandValuesTicker from '../components/BrandValuesTicker';
 import HowItWorksTimeline from '../components/HowItWorksTimeline';
 import FAQAccordion from '../components/FAQAccordion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface AboutProps {
   onNavigate: (page: string) => void;
@@ -14,6 +16,8 @@ interface AboutProps {
 export default function About({ onNavigate }: AboutProps) {
   const { t } = useLanguage();
   const prefersReducedMotion = useReducedMotion();
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object[]>([]);
 
   const brandValues = [
     'Clarity',
@@ -115,45 +119,51 @@ export default function About({ onNavigate }: AboutProps) {
     },
   ];
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": window.location.origin
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "About",
-        "item": `${window.location.origin}/about`
-      }
-    ]
-  };
+  useEffect(() => {
+    if (origin) {
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About",
+            "item": `${origin}/about`
+          }
+        ]
+      };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqItems.map(item => ({
-      "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.answer
-      }
-    }))
-  };
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqItems.map(item => ({
+          "@type": "Question",
+          "name": item.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": item.answer
+          }
+        }))
+      };
+
+      setStructuredData([breadcrumbSchema, faqSchema]);
+    }
+  }, [origin, faqItems]);
 
   return (
     <div className="min-h-screen bg-[#050608] pt-20 pb-16 md:pb-0">
       <SEO
         title="About Royal Peptides | Premium Research Peptides Canada"
         description="Learn about Royal Peptides Canada - your trusted source for quality research peptides. Fast shipping, secure checkout, and transparent availability."
-        canonical={`${window.location.origin}/about`}
-        structuredData={[breadcrumbSchema, faqSchema]}
+        canonical={origin ? `${origin}/about` : undefined}
+        structuredData={structuredData}
       />
       <PageBackground variant="about" />
 

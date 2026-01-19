@@ -11,6 +11,7 @@ import HeroFeaturedStrip from '../components/HeroFeaturedStrip';
 import HeroFAQ from '../components/HeroFAQ';
 import OpeningPromoBanner from '../components/OpeningPromoBanner';
 import { useHeroProducts } from '../hooks/useHeroProducts';
+import { useOrigin } from '../hooks/useOrigin';
 
 interface HomeProps {
   onNavigate: (page: string, productSlug?: string) => void;
@@ -35,10 +36,35 @@ export default function Home({ onNavigate, onCartUpdate }: HomeProps) {
   const [bundles, setBundles] = useState<Bundle[]>([]);
   const [loading, setLoading] = useState(true);
   const { products: heroProducts } = useHeroProducts();
+  const origin = useOrigin();
+  const [structuredData, setStructuredData] = useState<object[]>([]);
 
   useEffect(() => {
     fetchBundles();
   }, []);
+
+  useEffect(() => {
+    if (origin) {
+      const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Royal Peptides Canada",
+        "url": origin,
+        "logo": `${origin}/canada-logo.png`,
+        "sameAs": []
+      };
+
+      const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Royal Peptides Canada",
+        "url": origin,
+        "description": "Premium research peptides and compounds for scientific study in Canada"
+      };
+
+      setStructuredData([organizationSchema, websiteSchema]);
+    }
+  }, [origin]);
 
   const fetchBundles = async () => {
     const { data, error } = await supabase
@@ -77,30 +103,13 @@ export default function Home({ onNavigate, onCartUpdate }: HomeProps) {
     }
   ];
 
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Royal Peptides Canada",
-    "url": window.location.origin,
-    "logo": `${window.location.origin}/canada-logo.png`,
-    "sameAs": []
-  };
-
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Royal Peptides Canada",
-    "url": window.location.origin,
-    "description": "Premium research peptides and compounds for scientific study in Canada"
-  };
-
   return (
     <div className="min-h-screen bg-[#050608]">
       <SEO
         title="Research Peptides Canada | Premium Quality Research Compounds"
         description="High-purity research peptides and compounds for laboratory use. Discreet Canadian shipping, inventory tracked, high-purity pharmaceutical-grade peptides."
-        canonical={window.location.origin}
-        structuredData={[organizationSchema, websiteSchema]}
+        canonical={origin || undefined}
+        structuredData={structuredData}
       />
       <RotatingPromoBar />
       <section className="relative min-h-[65vh] md:min-h-[72vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden pt-20 md:pt-24">
