@@ -170,13 +170,9 @@ export default function Shipping({ onNavigate }: ShippingProps) {
         title="Shipping & Returns | Royal Peptides Canada"
         description="Clear shipping timelines, discreet packaging, and transparent return policies. Fast Canada-wide delivery and worldwide shipping available."
         canonical={`${window.location.origin}/shipping`}
-        structuredData={breadcrumbSchema}
+        structuredData={[breadcrumbSchema, faqSchema]}
       />
       <PageBackground variant="about" />
-
-      <script type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </script>
 
       <section className="relative bg-gradient-to-b from-[#050608] via-[#0B0D12] to-[#050608] py-16 md:py-20 border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,_rgba(0,160,224,0.08)_0%,_transparent_70%)]" />

@@ -153,13 +153,9 @@ export default function About({ onNavigate }: AboutProps) {
         title="About Royal Peptides | Premium Research Peptides Canada"
         description="Learn about Royal Peptides Canada - your trusted source for quality research peptides. Fast shipping, secure checkout, and transparent availability."
         canonical={`${window.location.origin}/about`}
-        structuredData={breadcrumbSchema}
+        structuredData={[breadcrumbSchema, faqSchema]}
       />
       <PageBackground variant="about" />
-
-      <script type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </script>
 
       <section className="relative bg-gradient-to-b from-[#050608] via-[#0B0D12] to-[#050608] py-16 md:py-20 border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,_rgba(0,160,224,0.08)_0%,_transparent_70%)]" />

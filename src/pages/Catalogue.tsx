@@ -237,13 +237,9 @@ export default function Catalogue({ onNavigate, onCartUpdate }: CatalogueProps) 
         title="Research Peptides Catalogue | Royal Peptides Canada"
         description="Browse our complete catalogue of high-purity research peptides and compounds. Premium quality, fast Canadian shipping, comprehensive research support."
         canonical={`${window.location.origin}/catalogue`}
-        structuredData={breadcrumbSchema}
+        structuredData={[breadcrumbSchema, productListSchema]}
       />
       <PageBackground variant="catalogue" />
-
-      <script type="application/ld+json">
-        {JSON.stringify(productListSchema)}
-      </script>
 
       {toastMessage && (
         <Toast message={toastMessage} onClose={() => setToastMessage('')} />
