@@ -53,9 +53,9 @@ export default function Navigation({ currentPage, onNavigate, cartCount }: Navig
             <div className="absolute -inset-2 bg-[#00A0E0]/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="flex items-center space-x-3 relative z-10">
               <img
-                src="/royal-peptides-logo.svg"
+                src="https://i.postimg.cc/LszBjg6b/61e6f2ff-edf5-45f6-8648-bc9785cb69b2.png"
                 alt="Royal Peptides"
-                className="h-9 w-9 sm:h-11 sm:w-11 drop-shadow-[0_0_10px_rgba(0,147,208,0.6)]"
+                className="h-8 sm:h-10 w-auto drop-shadow-[0_0_10px_rgba(0,147,208,0.6)]"
               />
               <span className="font-bold text-base sm:text-lg text-white tracking-wide">
                 Royal Peptides
@@ -63,10 +63,9 @@ export default function Navigation({ currentPage, onNavigate, cartCount }: Navig
             </div>
             <div className="h-4 w-px bg-white/20 mx-3 relative z-10 hidden sm:block" />
             <img
-              src="/canada-flag.svg"
+              src="https://i.postimg.cc/1XzGxW0V/Flag-of-Canada.png"
               alt="Canada"
-              className="h-3 w-6 sm:h-3.5 sm:w-7 relative z-10 object-contain opacity-90"
-              style={{ aspectRatio: '2/1' }}
+              className="h-4 sm:h-5 w-auto relative z-10 object-contain opacity-90"
             />
           </button>
 

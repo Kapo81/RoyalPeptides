@@ -29,6 +29,53 @@ export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }:
     fetchCartCount();
   }, [productSlug]);
 
+  useEffect(() => {
+    if (origin && product) {
+      const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image_url,
+        "description": product.description || product.benefits_summary || "Research peptide for laboratory use",
+        "sku": product.slug,
+        "offers": {
+          "@type": "Offer",
+          "url": `${origin}/product/${product.slug}`,
+          "priceCurrency": "CAD",
+          "price": product.selling_price || product.price_cad,
+          "availability": product.qty_in_stock && product.qty_in_stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      };
+
+      const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Catalogue",
+            "item": `${origin}/catalogue`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": product.name,
+            "item": `${origin}/product/${product.slug}`
+          }
+        ]
+      };
+
+      setStructuredData([productSchema, breadcrumbSchema]);
+    }
+  }, [origin, product]);
+
   const fetchCartCount = async () => {
     const sessionId = getSessionId();
     const { data, error } = await supabase
@@ -116,6 +163,10 @@ export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }:
     onCartUpdate?.();
   };
 
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#EFEFF3] flex items-center justify-center">
@@ -142,57 +193,6 @@ export default function ProductDetail({ productSlug, onNavigate, onCartUpdate }:
       </div>
     );
   }
-
-  const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
-  };
-
-  useEffect(() => {
-    if (origin && product) {
-      const productSchema = {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": product.name,
-        "image": product.image_url,
-        "description": product.description || product.benefits_summary || "Research peptide for laboratory use",
-        "sku": product.slug,
-        "offers": {
-          "@type": "Offer",
-          "url": `${origin}/product/${product.slug}`,
-          "priceCurrency": "CAD",
-          "price": product.selling_price || product.price_cad,
-          "availability": product.qty_in_stock && product.qty_in_stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-        }
-      };
-
-      const breadcrumbSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": origin
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Catalogue",
-            "item": `${origin}/catalogue`
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": product.name,
-            "item": `${origin}/product/${product.slug}`
-          }
-        ]
-      };
-
-      setStructuredData([productSchema, breadcrumbSchema]);
-    }
-  }, [origin, product]);
 
   const isLowStock = product && product.qty_in_stock && product.qty_in_stock > 0 && product.qty_in_stock <= 5;
   const isInStock = product && product.qty_in_stock && product.qty_in_stock > 0;
