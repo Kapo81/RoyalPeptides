@@ -1,0 +1,44 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="crownGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00A0E0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#11D0FF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Circular background with subtle gradient -->
+  <circle cx="22" cy="22" r="20" fill="url(#crownGradient)" opacity="0.15" filter="url(#glow)"/>
+
+  <!-- Crown shape -->
+  <g filter="url(#glow)">
+    <!-- Crown base -->
+    <rect x="10" y="26" width="24" height="4" rx="1" fill="url(#crownGradient)"/>
+
+    <!-- Crown points -->
+    <path d="M 10 26 L 12 18 L 14 22 L 16 16 L 18 22 L 20 18 L 22 14 L 24 18 L 26 22 L 28 16 L 30 22 L 32 18 L 34 26 Z"
+          fill="url(#crownGradient)" stroke="url(#crownGradient)" stroke-width="0.5"/>
+
+    <!-- Crown jewels (circles on points) -->
+    <circle cx="12" cy="18" r="1.5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="22" cy="14" r="2" fill="#ffffff" opacity="0.9"/>
+    <circle cx="32" cy="18" r="1.5" fill="#ffffff" opacity="0.9"/>
+
+    <!-- DNA helix underneath crown -->
+    <g opacity="0.6">
+      <path d="M 14 30 Q 18 31, 22 30 T 30 30"
+            stroke="url(#crownGradient)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M 14 32 Q 18 33, 22 32 T 30 32"
+            stroke="url(#crownGradient)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="16" y1="30" x2="16" y2="32" stroke="url(#crownGradient)" stroke-width="0.8"/>
+      <line x1="22" y1="30" x2="22" y2="32" stroke="url(#crownGradient)" stroke-width="0.8"/>
+      <line x1="28" y1="30" x2="28" y2="32" stroke="url(#crownGradient)" stroke-width="0.8"/>
+    </g>
+  </g>
+</svg>

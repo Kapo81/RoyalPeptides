@@ -1,0 +1,14 @@
+<svg width="28" height="14" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Red bars on sides -->
+  <rect x="0" y="0" width="7" height="14" fill="#FF0000"/>
+  <rect x="21" y="0" width="7" height="14" fill="#FF0000"/>
+
+  <!-- White center -->
+  <rect x="7" y="0" width="14" height="14" fill="#FFFFFF"/>
+
+  <!-- Maple leaf simplified -->
+  <g transform="translate(14, 7)">
+    <path d="M 0 -4 L -0.5 -1.5 L -2.5 -1 L -1 0 L -2 2 L 0 1.5 L 2 2 L 1 0 L 2.5 -1 L 0.5 -1.5 Z"
+          fill="#FF0000"/>
+  </g>
+</svg>

@@ -53,7 +53,7 @@ export default function Navigation({ currentPage, onNavigate, cartCount }: Navig
             <div className="absolute -inset-2 bg-[#00A0E0]/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="flex items-center space-x-3 relative z-10">
               <img
-                src="/ab72c5e3-25b2-4790-8243-cdc880fc0bdc.png"
+                src="/royal-peptides-logo.svg"
                 alt="Royal Peptides"
                 className="h-9 w-9 sm:h-11 sm:w-11 drop-shadow-[0_0_10px_rgba(0,147,208,0.6)]"
               />
@@ -63,7 +63,7 @@ export default function Navigation({ currentPage, onNavigate, cartCount }: Navig
             </div>
             <div className="h-4 w-px bg-white/20 mx-3 relative z-10 hidden sm:block" />
             <img
-              src="/canada-logo.png"
+              src="/canada-flag.svg"
               alt="Canada"
               className="h-3 w-6 sm:h-3.5 sm:w-7 relative z-10 object-contain opacity-90"
               style={{ aspectRatio: '2/1' }}
