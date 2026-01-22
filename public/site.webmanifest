@@ -1,0 +1,29 @@
+{
+  "name": "Royal Peptides Canada",
+  "short_name": "Royal Peptides",
+  "icons": [
+    {
+      "src": "/favicon-16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/ab72c5e3-25b2-4790-8243-cdc880fc0bdc.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#05070b",
+  "background_color": "#05070b",
+  "display": "standalone"
+}
