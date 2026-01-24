@@ -233,8 +233,8 @@ export default function Legal() {
           </p>
           <p className="text-gray-400 text-xs md:text-sm mb-3 md:mb-4">
             For questions regarding these terms, please contact us at{' '}
-            <a href="mailto:1984Gotfina@gmail.com" className="text-[#00A0E0] hover:text-cyan-400 transition-colors break-all">
-              1984Gotfina@gmail.com
+            <a href="mailto:peptidesroyal@gmail.com" className="text-[#00A0E0] hover:text-cyan-400 transition-colors break-all">
+              peptidesroyal@gmail.com
             </a>
           </p>
           <p className="text-gray-500 text-xs">Last updated: December 2024</p>

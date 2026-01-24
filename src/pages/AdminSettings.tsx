@@ -147,7 +147,7 @@ export default function AdminSettings() {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
-                placeholder="support@royalpeptides.com"
+                placeholder="peptidesroyal@gmail.com"
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#00A0E0]/50"
               />
               <p className="mt-1 text-xs text-gray-400">

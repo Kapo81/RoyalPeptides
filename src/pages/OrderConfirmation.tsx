@@ -397,7 +397,7 @@ export default function OrderConfirmation({ orderNumber, onNavigate }: OrderConf
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-400">
-          <p>Need help? Contact us at 1984Gotfina@gmail.com</p>
+          <p>Need help? Contact us at peptidesroyal@gmail.com</p>
         </div>
       </div>
     </div>

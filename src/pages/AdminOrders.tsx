@@ -63,7 +63,7 @@ export default function AdminOrders() {
   const logAdminAction = async (action: string, orderId: string, details: any = {}) => {
     try {
       await supabase.rpc('log_admin_action', {
-        p_admin_user: 'admin@zerobiotech.ca',
+        p_admin_user: 'peptidesroyal@gmail.com',
         p_action: action,
         p_order_id: orderId,
         p_details: details

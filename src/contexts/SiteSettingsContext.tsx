@@ -93,7 +93,7 @@ const defaultSettings: SiteSettings = {
     international_base_rate: 20,
   },
   interac_instructions: {
-    email: 'payments@royalpeptides.ca',
+    email: '1984Gotfina@gmail.com',
     question: 'Order Number?',
     answer: 'Your order number will be provided after checkout',
     deadline_hours: 24,
@@ -106,7 +106,7 @@ const defaultSettings: SiteSettings = {
     'Secure Payment Options',
     'Responsive Customer Support',
   ],
-  support_email: 'support@royalpeptides.ca',
+  support_email: 'peptidesroyal@gmail.com',
   processing_time_text: 'Orders ship within 24 business hours',
   site_name: 'Royal Peptides Canada',
   contact_phone: '',

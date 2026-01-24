@@ -196,7 +196,7 @@ Deno.serve(async (req: Request) => {
           },
           body: JSON.stringify({
             from: "Royal Peptides <orders@royalpeptides.com>",
-            to: ["Mathieu7gel@gmail.com"],
+            to: ["peptidesroyal@gmail.com"],
             subject: `🚨 New Order: ${order.order_number} - $${order.total.toFixed(2)} ${order.payment_status.toUpperCase()}`,
             html: emailHtml,
           }),
@@ -215,7 +215,7 @@ Deno.serve(async (req: Request) => {
         errorMessage = emailError.message;
       }
     } else {
-      console.log("RESEND_API_KEY not configured. Email would be sent to: Mathieu7gel@gmail.com");
+      console.log("RESEND_API_KEY not configured. Email would be sent to: peptidesroyal@gmail.com");
       console.log("Order:", order.order_number);
       console.log("Total:", order.total);
       console.log("Payment Status:", order.payment_status);

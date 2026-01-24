@@ -89,8 +89,8 @@ export default function Footer({ onNavigate }: FooterProps) {
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-gray-400 text-sm">
                 <Mail className="h-4 w-4 text-[#00A0E0]" />
-                <a href="mailto:research@royalpeptides.com" className="hover:text-[#00A0E0] transition-colors">
-                  research@royalpeptides.com
+                <a href="mailto:peptidesroyal@gmail.com" className="hover:text-[#00A0E0] transition-colors">
+                  peptidesroyal@gmail.com
                 </a>
               </div>
               <div className="text-gray-500 text-xs space-y-1">
