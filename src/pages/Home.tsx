@@ -9,7 +9,6 @@ import TrustStrip from '../components/TrustStrip';
 import HeroPromoPills from '../components/HeroPromoPills';
 import HeroFeaturedStrip from '../components/HeroFeaturedStrip';
 import HeroFAQ from '../components/HeroFAQ';
-import OpeningPromoBanner from '../components/OpeningPromoBanner';
 import { useHeroProducts } from '../hooks/useHeroProducts';
 import { useOrigin } from '../hooks/useOrigin';
 
@@ -184,10 +183,6 @@ export default function Home({ onNavigate, onCartUpdate }: HomeProps) {
               <h2 className="text-base md:text-lg lg:text-xl text-gray-300 mb-6 leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_both] font-normal">
                 {siteSettings?.hero_subheadline || 'Quality-tested compounds with fast, discreet shipping across Canada'}
               </h2>
-
-              <div className="flex justify-center lg:justify-start">
-                <OpeningPromoBanner />
-              </div>
 
               <div className="mb-6 md:mb-8 flex justify-center lg:justify-start">
                 <HeroPromoPills />
